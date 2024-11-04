@@ -11,8 +11,18 @@ export class PlayersService {
     private readonly logger = new Logger(PlayersService.name);
 
     async createUpdatePlayer(createPlayerDto: CreatePlayerDto): Promise<void>{
-        this.logger.log(`createPlayerDto: ${createPlayerDto}`)
-         this.create(createPlayerDto);
+        const { email } = createPlayerDto;
+
+        const playerFound = await this.players.find(player => player.email === email);
+
+        if (playerFound) {
+            await this.update(playerFound, createPlayerDto);
+        } else {
+            await this.create(createPlayerDto);   
+        }
+        
+       
+         
     }
 
     async getAllPlayers(): Promise<Player[]>{
@@ -31,6 +41,12 @@ export class PlayersService {
             rankingPosition: 1,
             playerPhoto: 'www.google.com.br/foto123.jpg'
          };
+         this.logger.log(`createPlayerDto: ${createPlayerDto}`)
          this.players.push(player);
+    }
+
+    private update(playerFound: Player ,createPlayerDto: CreatePlayerDto): void {
+        const { name } = createPlayerDto;
+        playerFound.name = name;
     }
 }
