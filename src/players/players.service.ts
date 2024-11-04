@@ -26,16 +26,21 @@ export class PlayersService {
     }
 
     async getAllPlayers(): Promise<Player[]>{
-        return await this.players; 
+        return this.players; 
     }
 
     async findByEmail(email: string): Promise<Player>{
-        const playerFound = await this.players.find(player => player.email === email)
+        const playerFound = this.players.find(player => player.email === email)
         if(playerFound) {
             return playerFound;
         } else {
             throw new NotFoundException('Player not Found')
         }
+    }
+
+    async deletePlayer(email): Promise<void>{
+        const playerFound = this.players.find(player => player.email === email)
+        this. players = this.players.filter(player => player.email !== playerFound.email)
     }
 
     private create(createPlayerDto: CreatePlayerDto): void {
@@ -58,4 +63,5 @@ export class PlayersService {
         const { name } = createPlayerDto;
         playerFound.name = name;
     }
+
 }
