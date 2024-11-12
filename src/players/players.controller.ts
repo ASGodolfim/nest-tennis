@@ -2,6 +2,7 @@ import { Body, Controller, Post, Get, Patch, Query, Delete, UsePipes, Validation
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { PlayersService } from './players.service';
 import { Players } from './interface/player.schema';
+import { PlayersValidationPipeParameters } from './pipes/players-validation-parameters.pipe'
 
 @Controller('api/v1/players')
 export class PlayersController {
@@ -37,12 +38,12 @@ export class PlayersController {
     }
 
     @Delete('/:email')
-    async deletePlayer(@Query('email') email: string){
+    async deletePlayer(@Query('email', PlayersValidationPipeParameters) email: string){
         this.playerService.deletePlayer(email);
     }
 
     @Delete('/:id')
-    async deletePlayerById(@Query('id') id: string){
+    async deletePlayerById(@Query('id', PlayersValidationPipeParameters) id: string){
         this.playerService.deletePlayer(id);
     }
 }
