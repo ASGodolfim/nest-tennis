@@ -1,29 +1,33 @@
 import * as mongose from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-export const PlayerScema = new mongose.Schema({
-    name: {
-        type: String
-    },
-    phoneNumber: {
-        type: String,
-        unique: true
-    },
-    email: {
-        type: String,
-        unique: true,
-    },
-    ranking: {
-        type: String
-    },
-    rankingPosition: {
-        type: Number
-    },
-    playerPhoto: {
-        type: String
-    }
-},
-{
-    timestamps: true,
-    collection: 'players'
-})
+export type PlayerDocument = mongose.HydratedDocument<Players>
 
+export class Players{
+
+    @Prop({require: true})
+    name: String;
+    
+    @Prop({require: true, unique: true})
+    phoneNumber: String;
+    
+    @Prop({require: true, unique: true})
+    email: String;
+    
+    @Prop({enum: ['F','D','C','B','A','S','Pro'],default: 'F',})
+    ranking: String;
+    
+    @Prop({default: 0})
+    rankingPosition: Number
+    
+    @Prop({default: 'www.google.com.br/foto123.jpg'})
+    playerPhoto: String
+
+    @Prop({default: Date.now()})
+    createdAt: Date
+
+    @Prop({default: Date.now()})
+    updatedAt: Date
+}
+
+export const PlayerSchema = SchemaFactory.createForClass(Players);
