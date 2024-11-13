@@ -8,6 +8,7 @@ import { PlayersController } from './players/players.controller';
 import { Players, PlayerSchema } from './players/interface/player.schema';
 import { CategoriesModule } from './categories/categories.module';
 import { Categories, CategorySchema } from './categories/interface/category.schema';
+import { ChallengesModule } from './challenges/challenges.module';
 
 @Module({
   imports: [PlayersModule, MongooseModule.forRoot('mongodb://localhost/nest', { dbName: 'superrank' }),
@@ -21,7 +22,8 @@ import { Categories, CategorySchema } from './categories/interface/category.sche
         schema: CategorySchema
       }]
     ),
-    CategoriesModule],
+    CategoriesModule,
+    ChallengesModule],
   controllers: [AppController, PlayersController],
   providers: [AppService, PlayersService],
 })
