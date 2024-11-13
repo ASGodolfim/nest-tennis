@@ -3,6 +3,7 @@ import { CreatePlayerDto } from './dto/create-player.dto';
 import { PlayersService } from './players.service';
 import { Players } from './interface/player.schema';
 import { PlayersValidationPipeParameters } from './pipes/players-validation-parameters.pipe'
+import { UpdatePlayerDto } from './dto/update-player.dto';
 
 @Controller('api/v1/players')
 export class PlayersController {
@@ -21,20 +22,23 @@ export class PlayersController {
         return await this.playerService.signUp(createPlayerDto);
     }
     
-    @Get('/:email')
-    async getPlayers(@Query('email') email: string): Promise<Players[] | Players> {
-        if (email) return await this.playerService.findByEmail(email)
+    @Get('/')
+    async getPlayers(): Promise<Players[] | Players> {
         return await this.playerService.getAllPlayers()
     }
 
     @Get('/:id')
-    async getPlayersById(@Query('id') id: string): Promise<Players> {
+    async getPlayersById(@Query('id', PlayersValidationPipeParameters) id: string): Promise<Players> {
         return await this.playerService.findById(id);
+    }
+    @Get('/:email')
+    async getPlayersByEmail(@Query('email', PlayersValidationPipeParameters) email: string): Promise<Players> {
+        return await this.playerService.findByEmail(email);
     }
 
     @Patch('/:id')
-    async updatePlayers(@Query('id') id: string, createPlayerDto: CreatePlayerDto): Promise<Players>{
-        return await this.playerService.updateById(id, createPlayerDto);
+    async updatePlayers(@Query('id', PlayersValidationPipeParameters) id: string, updatePlayerDto: UpdatePlayerDto): Promise<Players>{
+        return await this.playerService.updateById(id, updatePlayerDto);
     }
 
     @Delete('/:email')

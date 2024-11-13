@@ -3,6 +3,7 @@ import { CreatePlayerDto } from './dto/create-player.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Players } from './interface/player.schema';
+import { UpdatePlayerDto } from './dto/update-player.dto';
 
 @Injectable()
 export class PlayersService {
@@ -60,15 +61,17 @@ export class PlayersService {
             phoneNumber,
             email,
          });
+        const foundPlayer = await this.playerModel.findOne({email});
+        if(foundPlayer) throw new BadRequestException('Email already in use');
         if(!player) throw new BadRequestException('Please provide name email and phone number');
         await player.save();
         return player;
     }
 
-    async updateById(id: string, createPlayerDto: CreatePlayerDto): Promise<Players> {
-        const { name } = createPlayerDto;
+    async updateById(id: string, updatePlayerDto: UpdatePlayerDto): Promise<Players> {
+        const { name } = updatePlayerDto;
         const player = await this.playerModel.findByIdAndUpdate(id, { name, updatedAt: Date.now() });
-        if(!player) throw new NotFoundException('No Player Found');
+        if (!player) throw new NotFoundException('Player not found')
         return player;
     }
 

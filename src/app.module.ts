@@ -6,6 +6,7 @@ import { PlayersModule } from './players/players.module';
 import { PlayersService } from './players/players.service';
 import { PlayersController } from './players/players.controller';
 import { Players, PlayerSchema } from './players/interface/player.schema';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [PlayersModule, MongooseModule.forRoot('mongodb://localhost/nest', { dbName: 'superrank' }),
@@ -14,7 +15,8 @@ import { Players, PlayerSchema } from './players/interface/player.schema';
         name: Players.name,
         schema: PlayerSchema
       },]
-    )],
+    ),
+    CategoriesModule],
   controllers: [AppController, PlayersController],
   providers: [AppService, PlayersService],
 })
