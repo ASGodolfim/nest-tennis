@@ -16,4 +16,8 @@ export class CategoriesService {
         await categoryCreate.save();
         return categoryCreate;
     }
+
+    async getAllCategory(): Promise<Array<Categories>>{
+        return await this.categoryModel.find();
+    }
 }
