@@ -2,7 +2,7 @@ import { Body, Controller, Post, Get, Patch, Query, Delete, UsePipes, Validation
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { PlayersService } from './players.service';
 import { Players } from './interface/player.schema';
-import { PlayersValidationPipeParameters } from './pipes/players-validation-parameters.pipe'
+import { ValidationPipeParameters } from '../common/pipes/validation-parameters.pipe'
 import { UpdatePlayerDto } from './dto/update-player.dto';
 
 @Controller('api/v1/players')
@@ -28,26 +28,26 @@ export class PlayersController {
     }
 
     @Get('/:id')
-    async getPlayersById(@Query('id', PlayersValidationPipeParameters) id: string): Promise<Players> {
+    async getPlayersById(@Query('id', ValidationPipeParameters) id: string): Promise<Players> {
         return await this.playerService.findById(id);
     }
     @Get('/:email')
-    async getPlayersByEmail(@Query('email', PlayersValidationPipeParameters) email: string): Promise<Players> {
+    async getPlayersByEmail(@Query('email', ValidationPipeParameters) email: string): Promise<Players> {
         return await this.playerService.findByEmail(email);
     }
 
     @Patch('/:id')
-    async updatePlayers(@Query('id', PlayersValidationPipeParameters) id: string, updatePlayerDto: UpdatePlayerDto): Promise<Players>{
+    async updatePlayers(@Query('id', ValidationPipeParameters) id: string, updatePlayerDto: UpdatePlayerDto): Promise<Players>{
         return await this.playerService.updateById(id, updatePlayerDto);
     }
 
     @Delete('/:email')
-    async deletePlayer(@Query('email', PlayersValidationPipeParameters) email: string){
+    async deletePlayer(@Query('email', ValidationPipeParameters) email: string){
         this.playerService.deletePlayer(email);
     }
 
     @Delete('/:id')
-    async deletePlayerById(@Query('id', PlayersValidationPipeParameters) id: string){
+    async deletePlayerById(@Query('id', ValidationPipeParameters) id: string){
         this.playerService.deletePlayer(id);
     }
 }
