@@ -9,6 +9,7 @@ import { Players, PlayerSchema } from './players/interface/player.schema';
 import { CategoriesModule } from './categories/categories.module';
 import { Categories, CategorySchema } from './categories/interface/category.schema';
 import { ChallengesModule } from './challenges/challenges.module';
+import { Challenges, ChallengeSchema } from './challenges/interface/challenge.schema';
 
 @Module({
   imports: [PlayersModule, MongooseModule.forRoot('mongodb://localhost/nest', { dbName: 'superrank' }),
@@ -20,6 +21,10 @@ import { ChallengesModule } from './challenges/challenges.module';
       {
         name: Categories.name,
         schema: CategorySchema
+      },
+      {
+        name: Challenges.name,
+        schema: ChallengeSchema
       }]
     ),
     CategoriesModule,
