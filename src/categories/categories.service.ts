@@ -19,7 +19,7 @@ export class CategoriesService {
     }
 
     async getAllCategory(): Promise<Array<Categories>> {
-        return await this.categoryModel.find();
+        return await this.categoryModel.find().populate('players');
     }
 
     async getCategoryById(id: string): Promise<Categories> {
@@ -35,8 +35,23 @@ export class CategoriesService {
     }
 
     async updateCategory(id: string, updateCategoryDto: UpdateCategoryDto): Promise<Categories> {
-        const categoryFound = await this.categoryModel.findByIdAndUpdate(id, updateCategoryDto);
+        const categoryFound = await this.categoryModel.findByIdAndUpdate(id, {$set: updateCategoryDto, updatedAt: Date.now()});
         if(!categoryFound) throw new NotFoundException(`Category of id ${id} Not Found`);
         return categoryFound;
+    }
+
+    async setPlayerCategory(params: string[]): Promise<void> {
+        const category = params['category'];
+        const playerId = params['playerId'];
+
+        const categoryFound = await this.categoryModel.findOne({category: category});
+        if (!categoryFound) throw new BadRequestException(`No Category ${category} registred`);
+        
+        categoryFound.players.push(playerId)
+        await this.categoryModel.findOneAndUpdate({category},{$set: categoryFound, updatedAt: Date.now()});
+        
+        //const playerFound = await this.
+
+
     }
 }

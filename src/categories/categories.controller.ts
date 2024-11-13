@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { Categories } from './interface/category.schema';
 import { CategoriesService } from './categories.service';
@@ -9,19 +9,16 @@ export class CategoriesController {
     constructor(private readonly categoriesService: CategoriesService) {}
 
     @Get('/')
-    @UsePipes(ValidationPipe)
     async getAllCategories(): Promise<Array<Categories>> {
         return await this.categoriesService.getAllCategory();
     }
 
     @Get('/:id')
-    @UsePipes(ValidationPipe)
     async getCategoryById(@Param('id') id: string): Promise<Categories> {
         return await this.categoriesService.getCategoryById(id);
     }
 
     @Get('/:category')
-    @UsePipes(ValidationPipe)
     async getCategoryByName(@Param('category') category: string): Promise<Categories> {
         return await this.categoriesService.getCategoryByName(category);
     }
@@ -32,7 +29,13 @@ export class CategoriesController {
         return await this.categoriesService.createCategory(createCategoryDto);
     }
 
-    @Put('/:id')
+    @Post('/:category/players/:playerId')
+    @UsePipes(ValidationPipe)
+    async setPlayerCategory(@Param() params: string[]): Promise<void> {
+        return await this.categoriesService.setPlayerCategory(params);
+    }
+
+    @Patch('/:id')
     @UsePipes(ValidationPipe)
     async updateCategory(@Body() updateCategoryDto: UpdateCategoryDto,  id: string): Promise<Categories> {
         return this.categoriesService.updateCategory(id, updateCategoryDto);
