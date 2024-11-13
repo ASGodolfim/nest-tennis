@@ -4,10 +4,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Categories } from './interface/category.schema';
 import { Model } from 'mongoose';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { PlayersService } from 'src/players/players.service';
 
 @Injectable()
 export class CategoriesService {
-    constructor(@InjectModel('Categories') private readonly categoryModel: Model<Categories>) {}
+    constructor(@InjectModel('Categories') private readonly categoryModel: Model<Categories>, private readonly playerService: PlayersService) {}
 
     async createCategory(createCategoryDto: CreateCategoryDto): Promise<Categories> {
         const { category } = createCategoryDto;
@@ -45,6 +46,12 @@ export class CategoriesService {
         const playerId = params['playerId'];
 
         const categoryFound = await this.categoryModel.findOne({category: category});
+        const registredPlayer = (await this.categoryModel.find({category}).where('players')).includes(playerId);
+
+        if(registredPlayer) throw new BadRequestException('Player already in this Category');
+
+        await this.playerService.findById(playerId);
+
         if (!categoryFound) throw new BadRequestException(`No Category ${category} registred`);
         
         categoryFound.players.push(playerId)
