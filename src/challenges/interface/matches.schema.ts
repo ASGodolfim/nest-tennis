@@ -15,7 +15,7 @@ export class Matches{
     players: Array<Players>;
     
     @Prop({type: mongose.Schema.Types.ObjectId, ref: 'Players'})
-    def: Players;
+    winner: Players;
     
     @Prop({set: {type: String}})
     result: Array<Result>;

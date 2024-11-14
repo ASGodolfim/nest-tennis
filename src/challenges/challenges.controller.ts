@@ -4,7 +4,7 @@ import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { Challenges } from './interface/challenge.schema';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
 
-@Controller('challenges')
+@Controller('/api/v1/challenges')
 export class ChallengesController {
 
     constructor(private readonly challengeService: ChallengesService) {}

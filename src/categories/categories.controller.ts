@@ -23,6 +23,11 @@ export class CategoriesController {
         return await this.categoriesService.getCategoryByName(category);
     }
 
+    @Get('/:email')
+    async getCategoryByPlayer(@Param('email') email: string): Promise<Categories> {
+        return await this.categoriesService.getCategoryByPlayerEmail(email);
+    }
+
     @Post('/')
     @UsePipes(ValidationPipe)
     async createCategory(@Body() createCategoryDto: CreateCategoryDto): Promise<Categories>{

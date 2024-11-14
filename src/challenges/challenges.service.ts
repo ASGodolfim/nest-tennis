@@ -8,23 +8,29 @@ import { CategoriesService } from 'src/categories/categories.service';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
 import { ChallengeStatus } from './challenge-status.enum';
 
+
 @Injectable()
 export class ChallengesService {
     constructor(@InjectModel('Challenges') private readonly challengeModel: Model<Challenges>,
-                    private readonly playerService: PlayersService) {}
+                    private readonly playerService: PlayersService,
+                    private readonly categoryService: CategoriesService) {}
 
     async createChallenge(createChallengeDto: CreateChallengeDto): Promise<Challenges> {
         const { players, challenger } = createChallengeDto;
-        for(var i = 0; i >= 1; i++) {
+        for(var i = 0; i > players.length; i++) {
             let playerCheck = await this.challengeModel.findOne(players[i].email)
             if (!playerCheck) throw new NotFoundException(`Player ${players[i]} Not Found`)
         }
         if ((players[0] === challenger && players[1] !== challenger) 
          || (players[0] !== challenger && players[1] === challenger)) {
+            
+            const category = await this.categoryService.getCategoryByPlayerEmail(challenger.email.toString());
+            if (!category) throw new BadRequestException('Challenger must have a Category')
             const challenge = await this.challengeModel.create(CreateChallengeDto);
+            challenge.category = category.category;
             await challenge.save();
             return challenge;
-        }
+        } else throw new BadRequestException('Challenger must play it`s challenges')
     }
 
     async getChallengeByPlayer(id: string): Promise<Challenges> {
@@ -45,9 +51,8 @@ export class ChallengesService {
         if (status === ChallengeStatus.REQUESTED || status === ChallengeStatus.CANCELED) throw new BadRequestException('invalid status');
         const challenge = await this.challengeModel.findById(id);
         if(!challenge) throw new NotFoundException('Challenge Not Found')
-        if  ((challenge.status === 'REQUESTED' && (status === 'ACCEPTED' || status === 'DENIED'))
-         || (challenge.status === 'ACCEPTED' && status === 'DONE')){
-            const updateChallenge = await this.challengeModel.findByIdAndUpdate(id, {status});
+        if  ((challenge.status === 'REQUESTED' && (status === 'ACCEPTED' || status === 'DENIED'))){
+            const updateChallenge = await this.challengeModel.findByIdAndUpdate(id, {status, dateHourResponse: Date.now()});
             return updateChallenge;
         }
         throw new BadRequestException('invalid status');

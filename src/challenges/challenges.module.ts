@@ -6,6 +6,7 @@ import { PlayersModule } from 'src/players/players.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CategoriesModule } from 'src/categories/categories.module';
 
+
 @Module({
   imports:[MongooseModule.forFeature([{ name:'Challenges', schema: ChallengeSchema }]), PlayersModule, CategoriesModule],
   controllers: [ChallengesController],

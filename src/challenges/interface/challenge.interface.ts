@@ -17,7 +17,7 @@ export interface Challenge extends Document {
 export interface Match extends Document{
     category: string;
     players: Array<Player>;
-    def: Player;
+    winner: Player;
     result: Array<Result>;
 }
 

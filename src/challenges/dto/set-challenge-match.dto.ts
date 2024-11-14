@@ -5,7 +5,7 @@ import { Players } from "src/players/interface/player.schema";
 export class SetChallengeMatchDto {
 
     @IsNotEmpty()
-    def: Players;
+    winner: Players;
 
     @IsNotEmpty()
     result: Array<Result>

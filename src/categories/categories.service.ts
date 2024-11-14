@@ -35,6 +35,12 @@ export class CategoriesService {
         return categoryFound;
     }
 
+    async getCategoryByPlayerEmail(email: string): Promise<Categories> {
+        const playerFound = await this.playerService.findByEmail(email)
+        const categoryFound = await this.categoryModel.findOne(playerFound)
+        return categoryFound;
+    }
+
     async updateCategory(id: string, updateCategoryDto: UpdateCategoryDto): Promise<Categories> {
         const categoryFound = await this.categoryModel.findByIdAndUpdate(id, {$set: updateCategoryDto, updatedAt: Date.now()});
         if(!categoryFound) throw new NotFoundException(`Category of id ${id} Not Found`);
