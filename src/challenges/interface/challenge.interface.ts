@@ -11,10 +11,10 @@ export interface Challenge extends Document {
     challenger: Player;
     category: string;
     players: Array<Player>;
-    game: Game;
+    match: Match;
 }
 
-export interface Game extends Document{
+export interface Match extends Document{
     category: string;
     players: Array<Player>;
     def: Player;

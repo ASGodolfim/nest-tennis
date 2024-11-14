@@ -1,8 +1,8 @@
 import * as mongose from 'mongoose';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Players } from 'src/players/interface/player.schema';
 import { ChallengeStatus } from '../challenge-status.enum';
-import { Game } from './challenge.interface';
+import { Match } from './challenge.interface';
 
 export type ChallengeDocument = mongose.HydratedDocument<Challenges>
 
@@ -11,26 +11,26 @@ export class Challenges{
     @Prop({type: Date})
     dateHourChallenge: Date;
     
-    @Prop({type: ChallengeStatus})
+    @Prop({type: ChallengeStatus, default: ChallengeStatus.REQUESTED})
     status: ChallengeStatus;
 
-    @Prop({type: Date})
+    @Prop({type: Date, default: Date.now()})
     dateHourRequest: Date;
     
     @Prop({type: Date})
     dateHourResponse: Date;
     
-    @Prop()
+    @Prop({type: mongose.Schema.Types.ObjectId, ref: 'Players'})
     challenger: Players;
 
     @Prop({type: String})
     category: string;
     
-    @Prop()
+    @Prop({type: mongose.Schema.Types.ObjectId, ref: 'Players'})
     players: Array<Players>;
 
-    @Prop()
-    game: Game;
+    @Prop({type: mongose.Schema.Types.ObjectId, ref: 'Match'})
+    match: Match;
 }
 
 
